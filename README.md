@@ -1,3 +1,7 @@
+# 数据集说明
+https://tianchi.aliyun.com/dataset/98942
+
+
 # TianChi AIEarth
 This is the top 1 (B榜) solution for the TianChi AIEarth Contest (https://tianchi.aliyun.com/competition/entrance/531871/introduction?lang=zh-cn)
 

@@ -6,6 +6,9 @@ from torch.utils.data import DataLoader
 import pickle
 from utils import *
 import math
+import os
+
+# os.environ["CUDA_VISIBLE_DEVICES"] = "0,1,2,3"
 
 
 class NoamOpt:
@@ -40,7 +43,9 @@ class Trainer:
         self.configs = configs
         self.device = configs.device
         torch.manual_seed(5)
+        # device_ids = [0, 1, 2, 3]
         self.network = SpaceTimeTransformer(configs).to(configs.device)
+        # self.network  = torch.nn.DataParallel(self.network, device_ids=device_ids)
         adam = torch.optim.Adam(self.network.parameters(), lr=0, weight_decay=configs.weight_decay)
         factor = math.sqrt(configs.d_model*configs.warmup)*0.0014
         self.opt = NoamOpt(configs.d_model, factor, warmup=configs.warmup, optimizer=adam)
@@ -174,7 +179,7 @@ if __name__ == '__main__':
     print(configs.__dict__)
 
     print('\nreading data')
-    sst_train, nino_train, sst_eval, nino_eval, sst_test, nino_test = prepare_data('tcdata/enso_round1_train_20210201')
+    sst_train, nino_train, sst_eval, nino_eval, sst_test, nino_test = prepare_data('/ai/open11012/zhou/datasets/enso/enso_round1_train_20210201')
 
     print('processing training set')
     dataset_train = cmip_dataset(sst_train[0], nino_train[0], sst_train[1], nino_train[1], samples_gap=5)
@@ -188,5 +193,5 @@ if __name__ == '__main__':
     del sst_eval
     del nino_eval
     trainer = Trainer(configs)
-    trainer.save_configs('config_train.pkl')
+    trainer.save_configs('config1_train.pkl')
     trainer.train(dataset_train, dataset_eval, 'checkpoint.chk')

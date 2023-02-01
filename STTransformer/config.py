@@ -1,4 +1,5 @@
 import torch
+import os
 
 
 class Configs:
@@ -10,6 +11,7 @@ configs = Configs()
 
 # trainer related
 configs.n_cpu = 0
+
 configs.device = torch.device('cuda:0')
 configs.batch_size_test = 100
 configs.batch_size = 8
